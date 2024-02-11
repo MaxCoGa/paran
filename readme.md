@@ -2,6 +2,7 @@
 # Paran OS
 
 Current Version : indev
+Supported Arch: x86x64
 
 # Content
 - [Requirements](#requirements)
