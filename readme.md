@@ -19,6 +19,9 @@ Supported Arch: x86x64
 
 # Compile from source
 
+./build.sh CMD
+
+
 ## Docker
 
 # Use
