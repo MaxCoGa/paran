@@ -24,6 +24,14 @@ Supported Arch: x86x64
 
 ## Docker
 
+docker build -t ubuntudev . /-f dockerfile
+
+
+docker run --privileged -it --name UbuntuDev ubuntudev
+
+docker start UbuntuDev
+docker exec --privileged  -it UbuntuDev bash
+
 # Use
 
 # Credits
