@@ -46,6 +46,7 @@ PARAN_ARCH="x86_64" #x86,ARM
 KERNEL_VERSION=6.8.2
 BUSYBOX_VERSION=1.36.1
 BASH_VERSION=5.2.21
+GLIBC_VERSION=2.39
 INITFILESYSTEM_VERSION=1.0.0 #TODO: maybe buildroot 
 
 
@@ -89,6 +90,15 @@ get_busybox() {
 	tar xf busybox-${BUSYBOX_VERSION}.tar.bz2
 }
 
+get_glibc() {
+    echo "GET GLIBC";
+	cd ${PARAN_DIR}
+	mkdir -p bin
+	cd bin
+	wget http://ftp.gnu.org/gnu/libc/glibc-${GLIBC_VERSION}.tar.gz
+	tar -xvf glibc-${GLIBC_VERSION}.tar.gz
+}
+
 get_initfs() {
     echo "GET INITFS";
 }
@@ -117,6 +127,7 @@ build_kernel() {
 	cd ${PARAN_DIR}
 	mkdir -p boot-files
 	cp kernel/linux-${KERNEL_VERSION}/arch/x86/boot/bzImage boot-files
+	echo "BUILD PATH KERNEL: ${PARAN_DIR}/boot-files";
 }
 
 build_bash() {
@@ -131,6 +142,7 @@ build_bash() {
 	cd ${PARAN_DIR}
 	mkdir -p bin-files
 	cp bin/bash-${BASH_VERSION}/bash bin-files
+	echo "BUILD PATH BASH: ${PARAN_DIR}/bin-files";
 }
 
 build_busybox() {
@@ -144,15 +156,66 @@ build_busybox() {
 	
 	mkdir -p ${PARAN_DIR}/boot-files/initramfs
 	make CONFIG_PREFIX=${PARAN_DIR}/boot-files/initramfs install
+	echo "BUILD PATH BUSYBOX: ${PARAN_DIR}/boot-files/initramfs";
+}
+
+build_glibc() {
+    echo "BULDING GLIBC";
+	cd ${PARAN_DIR}
+	cd bin
+	cd glibc-${GLIBC_VERSION}
+
+	mkdir -p build
+	mkdir -p GLIBC
+	cd build
+	../configure --prefix=
+	make -j $(nproc)
 	
+	echo "INSTALL TO GLIBC";
+	make install DESTDIR=${PARAN_DIR}/bin/glibc-${GLIBC_VERSION}/GLIBC -j 2 # doesnt work with more 
+	echo "BUILD PATH GLIBC: ${PARAN_DIR}/bin/glibc-${GLIBC_VERSION}/GLIBC";
 }
 
 build_initfs() {
     echo "BUILDING INITFS";
+	cd ${PARAN_DIR}
+	# TODO: finish initramfs ; wget initramfs.gz
+	
+	rm -rf initfs
+	mkdir initfs
+	mkdir -p {initfs/bin,initfs/dev,initfs/proc,initfs/sbin,initfs/usr/bin,initfs/usr/sbin}
+	cp -r ${PARAN_DIR}/initramfs/* ${PARAN_DIR}/initfs
+	
+	# Add dependecies
+	cp -r ${PARAN_DIR}/boot-files/initramfs/* ${PARAN_DIR}/initfs # BUSYBOX
+	cp -r ${PARAN_DIR}/bin-files/* ${PARAN_DIR}/initfs/bin # BASH
+	cp -r ${PARAN_DIR}/bin/glibc-${GLIBC_VERSION}/GLIBC/* ${PARAN_DIR}/initfs # GLIBC maybe sysroot
+	
+	sed -i 's/bash/sh/' ${PARAN_DIR}/initfs/bin/ldd
+	cd ${PARAN_DIR}/initfs && ln -s lib lib64
+	rm ${PARAN_DIR}/initfs/linuxrc
+	set +e
+	strip -g \
+	${PARAN_DIR}/initfs/bin/* \
+	${PARAN_DIR}/initfs/sbin/* \
+	${PARAN_DIR}/initfs/lib/* \
+	2>/dev/null
+	set -e
 }
 
 create_iso() {
 	echo "CREATE ISO";
+	cd ${PARAN_DIR}
+	rm -rf iso
+	mkdir -p iso/boot/grub
+	
+	cd ${PARAN_DIR}/initfs
+	find . | cpio -o -H newc | gzip > ${PARAN_DIR}/iso/boot/root.cpio.gz
+	cp ${PARAN_DIR}/boot-files/bzImage ${PARAN_DIR}/iso/boot/bzImage
+	cp ${PWD_DIR}/config/system/grub.cfg ${PARAN_DIR}/iso/boot/grub/grub.cfg
+	grub-mkrescue -o ${PARAN_DIR}/paranos.iso ${PARAN_DIR}/iso
+	
+	
 }
 
 build_all() {
@@ -197,7 +260,7 @@ version() {
 }
 
 
-COMMAND_LIST=(init get_kernel get_bash get_busybox get_all build_kernel build_bash build_busybox build_all clean_kernel clean_all version)
+COMMAND_LIST=(init get_kernel get_bash get_busybox get_glibc get_all build_kernel build_bash build_busybox build_glibc build_initfs build_all clean_kernel clean_all create_iso version)
 if [[ "${COMMAND_LIST[@]}" =~ "$1" ]]
 then
 	$1
