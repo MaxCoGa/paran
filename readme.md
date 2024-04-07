@@ -25,12 +25,17 @@ Supported Arch: x86x64
 ## Docker
 
 docker build -t ubuntudev . /-f dockerfile
+or
+podman build -f Dockerfile -t ubuntudev   
 
 
 docker run --privileged -it --name UbuntuDev ubuntudev
+or
+podman run  --privileged -itd --name UbuntuDev ubuntudev
 
-docker start UbuntuDev
-docker exec --privileged  -it UbuntuDev bash
+
+docker/podman start UbuntuDev
+docker/podman exec --privileged  -it UbuntuDev bash
 
 # Use
 
