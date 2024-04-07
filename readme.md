@@ -31,7 +31,7 @@ podman build -f Dockerfile -t ubuntudev
 
 docker run --privileged -it --name UbuntuDev ubuntudev
 or
-podman run  --privileged -itd --name UbuntuDev ubuntudev
+podman run  --privileged -itd -v /mnt/pfs --name UbuntuDev ubuntudev
 
 
 docker/podman start UbuntuDev
