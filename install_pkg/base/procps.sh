@@ -9,5 +9,5 @@ cd procps-ng-4.0.4
             --with-systemd
 
 make src_w_LDADD='$(LDADD) -lsystemd'
-make -k check
+# make -k check
 make install

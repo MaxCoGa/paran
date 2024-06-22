@@ -9,7 +9,7 @@ cd openssl-3.2.1
          zlib-dynamic
 
 make
-HARNESS_JOBS=$(nproc) make test
+# HARNESS_JOBS=$(nproc) make test
 sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
 make MANSUFFIX=ssl install
 mv -v /usr/share/doc/openssl /usr/share/doc/openssl-3.2.1

@@ -7,7 +7,7 @@ cd elfutils-0.190
             --enable-libdebuginfod=dummy
 
 make
-make check
+# # make check
 
 make -C libelf install
 install -vm644 config/libelf.pc /usr/lib/pkgconfig

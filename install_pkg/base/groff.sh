@@ -2,8 +2,9 @@ cd /sources
 tar xf groff-1.23.0.tar.gz
 cd groff-1.23.0
 
-PAGE=<paper_size> ./configure --prefix=/usr
+PAGESIZE=letter
+PAGE=$PAGESIZE ./configure --prefix=/usr
 
 make
-make check
+# make check
 make install

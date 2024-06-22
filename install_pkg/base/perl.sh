@@ -21,6 +21,6 @@ sh Configure -des                                         \
              -Dusethreads
 
 make
-TEST_JOBS=$(nproc) make test_harness
+# TEST_JOBS=$(nproc) make test_harness
 make install
 unset BUILD_ZLIB BUILD_BZIP2

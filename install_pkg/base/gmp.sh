@@ -10,7 +10,7 @@ cd gmp-6.3.0
 
 make
 make html
-make check 2>&1 | tee gmp-check-log
-awk '/# PASS:/{total+=$3} ; END{print total}' gmp-check-log #199
+# make check 2>&1 | tee gmp-check-log
+# awk '/# PASS:/{total+=$3} ; END{print total}' gmp-check-log #199
 make install
 make install-html

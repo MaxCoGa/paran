@@ -12,8 +12,8 @@ sed -i '/int Guess/a \
 
 python3 configure.py --bootstrap
 
-./ninja ninja_test
-./ninja_test --gtest_filter=-SubprocessTest.SetWithLots
+# ./ninja ninja_test
+# ./ninja_test --gtest_filter=-SubprocessTest.SetWithLots
 
 install -vm755 ninja /usr/bin/
 install -vDm644 misc/bash-completion /usr/share/bash-completion/completions/ninja

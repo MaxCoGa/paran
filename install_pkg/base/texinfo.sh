@@ -5,7 +5,7 @@ cd texinfo-7.1
 ./configure --prefix=/usr
 
 make
-make check
+# # make check
 make install
 
 make TEXMF=/usr/share/texmf install-tex

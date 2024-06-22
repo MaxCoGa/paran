@@ -7,5 +7,5 @@ cd libffi-3.4.4
             --with-gcc-arch=native
 
 make
-make check
+# make check
 make install

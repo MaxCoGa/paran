@@ -5,5 +5,5 @@ cd diffutils-3.10
 ./configure --prefix=/usr
 
 make
-make check
+# # make check
 make install

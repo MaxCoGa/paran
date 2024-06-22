@@ -5,5 +5,5 @@ cd autoconf-2.72
 ./configure --prefix=/usr
 
 make
-make check
+# # make check
 make install

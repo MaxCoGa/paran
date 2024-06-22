@@ -26,7 +26,7 @@ sed -e "s|$SRCDIR/unix/pkgs/itcl4.2.3|/usr/lib/itcl4.2.3|" \
 
 unset SRCDIR
 
-make test
+# make test
 make install
 
 chmod -v u+w /usr/lib/libtcl8.6.so

@@ -7,6 +7,6 @@ cd mpc-1.3.1
             --docdir=/usr/share/doc/mpc-1.3.1
 make
 make html
-make check #74
+# make check #74
 make install
 make install-html

@@ -4,6 +4,7 @@ cd grub-2.12
 
 echo depends bli part_gpt > grub-core/extra_deps.lst
 
+unset {C,CPP,CXX,LD}FLAGS
 ./configure --prefix=/usr          \
             --sysconfdir=/etc      \
             --disable-efiemu       \

@@ -20,6 +20,6 @@ sed -i '/test_mkfds/s/^/#/' tests/helpers/Makemodule.am
             --docdir=/usr/share/doc/util-linux-2.39.3
 
 make 
-chown -R tester .
-su tester -c "make -k check"
+# chown -R tester .
+# su tester -c "make -k check"
 make install

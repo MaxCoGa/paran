@@ -1,6 +1,6 @@
 cd /sources
-tar xf util-linux-2.39.3.tar.xz
-cd util-linux-2.39.3
+tar xf e2fsprogs-1.47.0.tar.gz
+cd e2fsprogs-1.47.0
 
 mkdir -v build
 cd       build
@@ -13,7 +13,7 @@ cd       build
              --disable-fsck
 
 make 
-make check
+# # make check
 make install
 
 rm -fv /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a

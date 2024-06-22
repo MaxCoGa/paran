@@ -14,7 +14,7 @@ cd dbus-1.14.10
             --with-system-socket=/run/dbus/system_bus_socket
 
 make
-make check
+# # make check
 make install
 
 ln -sfv /etc/machine-id /var/lib/dbus

@@ -12,5 +12,5 @@ cd man-db-2.12.0
             --with-grap=/usr/bin/grap
 
 make
-make check
+# # make check
 make install

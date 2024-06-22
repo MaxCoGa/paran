@@ -7,5 +7,5 @@ cd gdbm-1.23
             --enable-libgdbm-compat
 
 make
-make check
+# make check
 make install

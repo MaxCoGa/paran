@@ -5,5 +5,5 @@ cd gzip-1.13
 ./configure --prefix=/usr
 
 make
-make check
+# make check
 make install

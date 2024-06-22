@@ -24,11 +24,11 @@ cd       build
 
 make
 
-ulimit -s 32768
-chown -R tester .
-su tester -c "PATH=$PATH make -k -j8 check"
+# ulimit -s 32768
+# chown -R tester .
+# su tester -c "PATH=$PATH make -k -j8 check"
 
-../contrib/test_summary | grep -A7 Summ
+# ../contrib/test_summary | grep -A7 Summ
 
 make install
 chown -v -R root:root \

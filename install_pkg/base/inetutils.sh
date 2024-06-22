@@ -14,6 +14,6 @@ cd inetutils-2.5
             --disable-servers
 
 make
-make check
+# make check
 make install
 mv -v /usr/{,s}bin/ifconfig

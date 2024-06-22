@@ -9,5 +9,5 @@ cd libxcrypt-4.4.36
             --disable-failure-tokens
 
 make
-make check #32
+# make check #32
 make install

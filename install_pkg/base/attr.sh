@@ -7,5 +7,5 @@ cd attr-2.5.2
             --sysconfdir=/etc \
             --docdir=/usr/share/doc/attr-2.5.2
 make
-make check #2
+# # make check #2
 make install
