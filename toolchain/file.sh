@@ -1,8 +1,8 @@
 ## File
 cd $PFS/sources
-# wget https://astron.com/pub/file/file-5.45.tar.gz
-tar xf file-5.45.tar.gz
-cd file-5.45
+
+tar xf file-*.tar.gz --strip-components=1 --directory=file
+pushd file
 
 mkdir build
 pushd build
@@ -19,3 +19,6 @@ make FILE_COMPILE=$(pwd)/build/src/file
 make DESTDIR=$PFS install
 
 rm -v $PFS/usr/lib/libmagic.la
+
+popd
+rm -rf file

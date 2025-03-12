@@ -1,8 +1,7 @@
 cd $PFS/sources
-cd binutils-${BINUTILS_VERSION}
+pushd binutils
 
 sed '6009s/$add_dir//' -i ltmain.sh
-
 
 mkdir -v build2
 cd       build2
@@ -22,3 +21,6 @@ make
 make DESTDIR=$PFS install
 
 rm -v $PFS/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+popd
+
+rm -rf binutils

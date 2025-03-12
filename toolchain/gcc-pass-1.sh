@@ -1,15 +1,15 @@
 # GCC pass 1
 cd $PFS/sources
-tar xf gcc-${GCC_VERSION}.tar.xz
-cd gcc-${GCC_VERSION}
+tar xf gcc-*.tar.xz --strip-components=1 --directory=gcc
+pushd gcc
 
 
-tar -xf ../mpfr-${MPFR_VERSION}.tar.xz
-mv -v mpfr-${MPFR_VERSION} mpfr
-tar -xf ../gmp-${GMP_VERSION}.tar.xz
-mv -v gmp-${GMP_VERSION} gmp
-tar -xf ../mpc-${MPC_VERSION}.tar.gz
-mv -v mpc-${MPC_VERSION} mpc
+tar -xf ../mpfr-*.tar.xz
+mv -v mpfr-*mpfr
+tar -xf ../gmp-*.tar.xz
+mv -v gmp-* gmp
+tar -xf ../mpc-*.tar.gz
+mv -v mpc-* mpc
 
 case $(uname -m) in
   x86_64)
@@ -47,3 +47,5 @@ make install
 cd ..
 cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
   `dirname $($PFS_TGT-gcc -print-libgcc-file-name)`/include/limits.h
+
+popd

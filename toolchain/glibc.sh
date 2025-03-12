@@ -1,7 +1,7 @@
 # GLIBC
 cd $PFS/sources
-tar xf glibc-${GLIBC_VERSION}.tar.xz
-cd glibc-${GLIBC_VERSION}
+tar xf glibc-*.tar.xz --strip-components=1 --directory=glibc
+pushd glibc
 
 case $(uname -m) in
     i?86)   ln -sfv ld-linux.so.2 $PFS/lib/ld-lsb.so.3
@@ -35,3 +35,6 @@ sed '/RTLDLIST=/s@/usr@@g' -i $PFS/usr/bin/ldd
 echo 'int main(){}' | $PFS_TGT-gcc -xc -
 readelf -l a.out | grep ld-linux
 rm -v a.out
+
+popd
+rm -rf glibc

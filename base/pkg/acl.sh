@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 cd /sources
 tar xf acl-2.3.2.tar.xz
 cd acl-2.3.2

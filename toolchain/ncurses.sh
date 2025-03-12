@@ -1,6 +1,6 @@
 cd $PFS/sources
-tar xf ncurses-6.4-20230520.tar.xz
-cd ncurses-6.4-20230520
+tar xf ncurses-*.tar.xz --strip-components=1 --directory=ncurses
+pushd ncurses
 
 sed -i s/mawk// configure
 mkdir build
@@ -29,3 +29,6 @@ make DESTDIR=$PFS TIC_PATH=$(pwd)/build/progs/tic install
 ln -sv libncursesw.so $PFS/usr/lib/libncurses.so
 sed -e 's/^#if.*XOPEN.*$/#if 1/' \
     -i $PFS/usr/include/curses.h
+
+popd
+rm -rf ncurses

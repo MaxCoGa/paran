@@ -1,6 +1,6 @@
 # LIBSTDC from GCC source
 cd $PFS/sources
-cd gcc-${GCC_VERSION}
+pushd gcc
 
 mkdir -v libstd-build
 cd       libstd-build
@@ -17,3 +17,4 @@ cd       libstd-build
 make
 make DESTDIR=$PFS install
 rm -v $PFS/usr/lib/lib{stdc++{,exp,fs},supc++}.la
+popd

@@ -1,7 +1,7 @@
 # BINUTILS pass 1
 cd $PFS/sources
-tar xf binutils-${BINUTILS_VERSION}.tar.xz
-cd binutils-${BINUTILS_VERSION}
+tar xf binutils-*.tar.xz --strip-components=1 --directory=binutils
+pushd binutils
 mkdir -v build
 cd       build
 
@@ -15,3 +15,5 @@ cd       build
 
 make
 make install
+
+popd

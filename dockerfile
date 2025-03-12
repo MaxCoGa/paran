@@ -19,7 +19,13 @@ RUN apt install -y bzip2 git make gcc libncurses-dev flex bison \
     bzip2-doc extlinux libbrotli-dev libbz2-dev libfreetype-dev libltdl-dev \
     libltdl7 libpng-dev libpng-tools libtool texinfo
 
-RUN git clone https://github.com/MaxCoGa/paran.git
+# RUN git clone https://github.com/MaxCoGa/paran.git
+
+COPY ./ /paran-src/
+WORKDIR /paran-src/
+RUN chmod +x requirements.sh
+RUN chmod +x exec/*
+RUN ./exec/bash-fix.sh
 
 # set the entrypoint
 ENTRYPOINT ["/bin/bash"]

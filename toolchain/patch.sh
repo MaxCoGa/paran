@@ -1,9 +1,12 @@
 cd $PFS/sources
-tar xf patch-2.7.6.tar.xz
-cd patch-2.7.6
+tar xf patch-*.tar.xz --strip-components=1 --directory=patch
+pushd patch
 
 ./configure --prefix=/usr   \
             --host=$PFS_TGT   \
             --build=$(build-aux/config.guess)
 make
 make DESTDIR=$PFS install
+
+popd
+rm -rf patch

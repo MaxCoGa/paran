@@ -1,14 +1,14 @@
 # GCC pass 2
 cd $PFS/sources
-cd gcc-${GCC_VERSION}
+pushd gcc
 
 
-tar -xf ../mpfr-${MPFR_VERSION}.tar.xz
-mv -v mpfr-${MPFR_VERSION} mpfr
-tar -xf ../gmp-${GMP_VERSION}.tar.xz
-mv -v gmp-${GMP_VERSION} gmp
-tar -xf ../mpc-${MPC_VERSION}.tar.gz
-mv -v mpc-${MPC_VERSION} mpc
+tar -xf ../mpfr-*.t*ar.xz
+mv -v mpfr-* mpfr
+tar -xf ../gmp-*.tar.xz
+mv -v gmp-* gmp
+tar -xf ../mpc-*.tar.gz
+mv -v mpc-* mpc
 
 case $(uname -m) in
   x86_64)
@@ -46,3 +46,6 @@ make
 # https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter06/gcc-pass2.html
 make DESTDIR=$PFS install
 ln -sv gcc $PFS/usr/bin/cc
+
+popd
+rm -rf gcc

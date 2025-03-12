@@ -1,6 +1,7 @@
 cd $PFS/sources
-tar xf make-4.4.1.tar.gz
-cd make-4.4.1
+
+tar xf make-*.tar.gz --strip-components=1 --directory=make
+pushd make
 
 ./configure --prefix=/usr   \
             --without-guile \
@@ -8,3 +9,6 @@ cd make-4.4.1
             --build=$(build-aux/config.guess)
 make
 make DESTDIR=$PFS install
+
+popd
+rm -rf make

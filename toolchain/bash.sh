@@ -1,6 +1,6 @@
 cd $PFS/sources
-tar xf bash-${BASH_VERSION}.tar.gz
-cd bash-${BASH_VERSION}
+tar xf bash-*.tar.gz --strip-components=1 --directory=bash
+pushd bash
 
 ./configure --prefix=/usr                      \
             --build=$(sh support/config.guess) \
@@ -10,3 +10,6 @@ cd bash-${BASH_VERSION}
 make
 make DESTDIR=$PFS install
 ln -sv bash $PFS/bin/sh
+
+popd
+rm -rf bash

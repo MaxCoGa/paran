@@ -1,7 +1,6 @@
 cd $PFS/sources
-tar xf gawk-5.3.0.tar.xz
-cd gawk-5.3.0
-
+tar xf gawk-*.tar.xz --strip-components=1 --directory=gawk
+pushd gawk
 
 sed -i 's/extras//' Makefile.in
 ./configure --prefix=/usr   \
@@ -9,3 +8,6 @@ sed -i 's/extras//' Makefile.in
             --build=$(build-aux/config.guess)
 make
 make DESTDIR=$PFS install
+
+popd
+rm -rf gawk

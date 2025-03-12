@@ -1,7 +1,7 @@
 cd $PFS/sources
 
-tar xf xz-5.4.7.tar.gz
-cd xz-5.4.7
+tar xf xz-*.tar.gz --strip-components=1 --directory=xz
+pushd xz
 
 ./configure --prefix=/usr                     \
             --host=$PFS_TGT                     \
@@ -11,3 +11,6 @@ cd xz-5.4.7
 make
 make DESTDIR=$PFS install
 rm -v $PFS/usr/lib/liblzma.la 
+
+popd
+rm -rf xz

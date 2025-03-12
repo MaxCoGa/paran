@@ -7,6 +7,7 @@ make defconfig
 make menuconfig
 make
 make modules_install
+make firmware_install
 
 cp -iv arch/x86/boot/bzImage /boot/vmlinuz-6.8.2-lfs-12.1-systemd
 cp -iv System.map /boot/System.map-6.8.2

@@ -1,8 +1,7 @@
-## Diffutils
 cd $PFS/sources
 
-tar xf diffutils-3.10.tar.xz
-cd diffutils-3.10
+tar xf diffutils*.tar.xz --strip-components=1 --directory=diffutils
+pushd diffutils
 
 ./configure --prefix=/usr   \
             --host=$PFS_TGT \
@@ -11,3 +10,5 @@ cd diffutils-3.10
 make
 make DESTDIR=$PFS install
 
+popd
+rm -rf diffutils

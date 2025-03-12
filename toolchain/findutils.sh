@@ -1,7 +1,6 @@
 cd $PFS/sources
-tar xf findutils-4.9.0.tar.xz
-cd findutils-4.9.0
-
+tar xf findutils-*.tar.xz --strip-components=1 --directory=findutils
+pushd findutils
 
 ./configure --prefix=/usr                   \
             --localstatedir=/var/lib/locate \
@@ -10,3 +9,6 @@ cd findutils-4.9.0
 
 make
 make DESTDIR=$PFS install
+
+popd
+rm -rf findutils
