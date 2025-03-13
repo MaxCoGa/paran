@@ -1,5 +1,9 @@
 # GLIBC
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p glibc
 tar xf glibc-*.tar.xz --strip-components=1 --directory=glibc
 pushd glibc
 

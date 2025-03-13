@@ -1,5 +1,8 @@
-cd $PFS/sources
+#!/bin/bash
+set -e
 
+cd $PFS/sources
+mkdir -p make
 tar xf make-*.tar.gz --strip-components=1 --directory=make
 pushd make
 

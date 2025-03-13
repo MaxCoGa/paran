@@ -1,5 +1,9 @@
 # BINUTILS pass 1
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p binutils
 tar xf binutils-*.tar.xz --strip-components=1 --directory=binutils
 pushd binutils
 mkdir -v build

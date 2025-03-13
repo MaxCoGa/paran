@@ -1,4 +1,8 @@
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p findutils
 tar xf findutils-*.tar.xz --strip-components=1 --directory=findutils
 pushd findutils
 

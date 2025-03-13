@@ -40,7 +40,7 @@ chmod +x $PFS/sources/base/pkg/*.sh
 chmod +x $PFS/sources/chroot/*.sh 
 
 cd $PFS/sources
-sh $PFS/sources/base/get_pkg.sh
+sh $PFS/sources/base/get_pkg.sh $PFS/sources/base
 cd $PFS
 
 chown root:root $PFS/sources/*
@@ -71,52 +71,51 @@ case $(uname -m) in
 esac
 
 #passwd root
-
+# echo "pfs ALL = NOPASSWD : ALL" >> /etc/sudoers
 # switch to pfs user
-su - pfs
+# su - pfs -c "/paran-src/pfs.sh"
+su pfs -c "/paran-src/pfs.sh"
 
-# Envrionment Setup
-# bash profile
-cat > ~/.bash_profile << "EOF"
-exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
-EOF
+# # Envrionment Setup
+# # bash profile
+# cat > ~/.bash_profile << "EOF"
+# exec env -i HOME=$HOME TERM=$TERM PS1='\u:\w\$ ' /bin/bash
+# EOF
 
-# bashrc
-cat > ~/.bashrc << "EOF"
-set +h
-umask 022
-PFS=/mnt/pfs
-LC_ALL=POSIX
-PFS_TGT=$(uname -m)-pfs-linux-gnu
-PATH=/usr/bin
-if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
-PATH=$PFS/tools/bin:$PATH
-CONFIG_SITE=$PFS/usr/share/config.site
-export PFS LC_ALL PFS_TGT PATH CONFIG_SITE
-EOF
+# # bashrc
+# cat > ~/.bashrc << "EOF"
+# set +h
+# umask 022
+# PFS=/mnt/pfs
+# LC_ALL=POSIX
+# PFS_TGT=$(uname -m)-pfs-linux-gnu
+# PATH=/usr/bin
+# if [ ! -L /bin ]; then PATH=/bin:$PATH; fi
+# PATH=$PFS/tools/bin:$PATH
+# CONFIG_SITE=$PFS/usr/share/config.site
+# export PFS LC_ALL PFS_TGT PATH CONFIG_SITE
+# EOF
 
-export MAKEFLAGS=-j16
+# cat >> ~/.bashrc << "EOF"
+# export MAKEFLAGS=-j$(nproc)
+# EOF
 
-cat >> ~/.bashrc << "EOF"
-export MAKEFLAGS=-j$(nproc)
-EOF
+# source ~/.bash_profile
 
-source ~/.bash_profile
-
-##########################
-# BUILDING THE TOOLCHAIN #
-##########################
-## ch.5 Compiling a Cross-Toolchain
-# BINUTILS pass 1
-cd $PFS/sources
-sh $PFS/sources/toolchain/build_toolchain.sh $PFS/sources/toolchain
+# ##########################
+# # BUILDING THE TOOLCHAIN #
+# ##########################
+# ## ch.5 Compiling a Cross-Toolchain
+# # BINUTILS pass 1
+# cd $PFS/sources
+# sh $PFS/sources/toolchain/build_toolchain.sh $PFS/sources/toolchain
 
 
 ###################
 ### CHROOT TOOLCHAIN
 
 # exit pfs user
-exit
+# exit
 ###
 # CREATE CHROOT  ch 7 with virtual kernel run these from chroot 
 
@@ -159,7 +158,7 @@ chroot "$PFS" /usr/bin/env -i   \
     MAKEFLAGS="-j$(nproc)"      \
     TESTSUITEFLAGS="-j$(nproc)" \
     /bin/bash --login           \
-    -c "sh $PFS/sources/chroot/chroot-usr.sh"
+    -c "sh /sources/chroot/chroot-usr.sh"
 
 
 # building

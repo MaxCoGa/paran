@@ -1,4 +1,8 @@
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p ncurses
 tar xf ncurses-*.tar.xz --strip-components=1 --directory=ncurses
 pushd ncurses
 

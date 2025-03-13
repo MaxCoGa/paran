@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 save_usrlib="$(cd /usr/lib; ls ld-linux*[^g])
              libc.so.6
              libthread_db.so.1

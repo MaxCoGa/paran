@@ -1,11 +1,15 @@
 # GCC pass 1
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p gcc
 tar xf gcc-*.tar.xz --strip-components=1 --directory=gcc
 pushd gcc
 
 
 tar -xf ../mpfr-*.tar.xz
-mv -v mpfr-*mpfr
+mv -v mpfr-* mpfr
 tar -xf ../gmp-*.tar.xz
 mv -v gmp-* gmp
 tar -xf ../mpc-*.tar.gz

@@ -1,4 +1,9 @@
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+
+mkdir -p linux
 tar xf linux-*.tar.xz --strip-components=1 --directory=linux
 pushd linux
 

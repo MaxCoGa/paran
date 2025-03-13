@@ -1,5 +1,8 @@
-cd $PFS/sources
+#!/bin/bash
+set -e
 
+cd $PFS/sources
+mkdir -p grep
 tar xf grep-*.tar.xz --strip-components=1 --directory=grep
 pushd grep
 

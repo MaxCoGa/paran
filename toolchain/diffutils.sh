@@ -1,5 +1,8 @@
-cd $PFS/sources
+#!/bin/bash
+set -e
 
+cd $PFS/sources
+mkdir -p diffutils
 tar xf diffutils*.tar.xz --strip-components=1 --directory=diffutils
 pushd diffutils
 

@@ -8,7 +8,7 @@ run_script() {
     local script_dir="$1"
     local script="$2"
     echo "Running $script..."
-    if ! sh "$script_dir/$script"; then
+    if ! sh -e "$script_dir/$script"; then
         echo "Error: $script failed with exit code $?"
         exit 1
     fi

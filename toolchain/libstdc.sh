@@ -1,4 +1,7 @@
 # LIBSTDC from GCC source
+#!/bin/bash
+set -e
+
 cd $PFS/sources
 pushd gcc
 

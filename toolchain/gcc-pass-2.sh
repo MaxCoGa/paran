@@ -1,4 +1,7 @@
 # GCC pass 2
+#!/bin/bash
+set -e
+
 cd $PFS/sources
 pushd gcc
 

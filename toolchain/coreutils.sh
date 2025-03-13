@@ -1,4 +1,8 @@
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p coreutils
 tar xf coreutils-*.tar.xz --strip-components=1 --directory=coreutils
 pushd coreutils
 ./configure --prefix=/usr                     \

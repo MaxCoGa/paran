@@ -1,6 +1,9 @@
 ## File
-cd $PFS/sources
+#!/bin/bash
+set -e
 
+cd $PFS/sources
+mkdir -p file
 tar xf file-*.tar.gz --strip-components=1 --directory=file
 pushd file
 

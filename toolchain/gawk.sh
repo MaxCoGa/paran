@@ -1,4 +1,8 @@
+#!/bin/bash
+set -e
+
 cd $PFS/sources
+mkdir -p gawk
 tar xf gawk-*.tar.xz --strip-components=1 --directory=gawk
 pushd gawk
 

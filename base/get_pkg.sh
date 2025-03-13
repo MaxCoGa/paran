@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+LIST_DIR=${1} # ${1:-./scripts} 
+
 # whitout chroot!
 download_with_retry() {
     local file_list=$1
@@ -35,5 +37,5 @@ download_with_retry() {
 }
 
 # Download files from both lists
-download_with_retry "pkg_list"
-download_with_retry "patches_list"
+download_with_retry "$LIST_DIR/pkg_list" # TODO: error if no list or empty
+download_with_retry "$LIST_DIR/patches_list"

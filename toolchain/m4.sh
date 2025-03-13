@@ -1,5 +1,8 @@
-cd $PFS/sources
+#!/bin/bash
+set -e
 
+cd $PFS/sources
+mkdir -p m4
 tar xf m4-*.tar.xz --strip-components=1 --directory=m4
 pushd m4
 

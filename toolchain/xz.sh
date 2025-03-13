@@ -1,6 +1,9 @@
-cd $PFS/sources
+#!/bin/bash
+set -e
 
-tar xf xz-*.tar.gz --strip-components=1 --directory=xz
+cd $PFS/sources
+mkdir -p xz
+tar xf xz-*.tar.xz --strip-components=1 --directory=xz
 pushd xz
 
 ./configure --prefix=/usr                     \

@@ -88,7 +88,7 @@ echo "tester:x:101:" >> /etc/group
 install -o tester -d /home/tester
 
 # remove i have no name (chroot) file is created
-exec /usr/bin/bash --login
+# exec /usr/bin/bash --login # will stop script
 
 # log file WARN: wtmp, btmp, and lastlog deprecated
 touch /var/log/{btmp,lastlog,faillog,wtmp}
