@@ -105,6 +105,7 @@ chmod -v 600  /var/log/btmp
 
 # Gettext
 cd /sources
+mkdir -p gettext
 tar xf gettext-*.tar.xz --strip-components=1 --directory=gettext
 pushd gettext
 
@@ -116,6 +117,7 @@ rm -rf gettext
 
 # Bison
 cd /sources
+mkdir -p bison
 tar xf bison-*.tar.xz --strip-components=1 --directory=bison
 pushd bison
 ./configure --prefix=/usr \
@@ -128,7 +130,8 @@ rm -rf bison
 
 # Perl 
 cd /sources
-tar xf perl-*.tar.xz --strip-components=1 --directory=bison
+mkdir -p perl
+tar xf perl-*.tar.xz --strip-components=1 --directory=perl
 pushd perl
 sh Configure -des                                        \
              -Dprefix=/usr                               \
@@ -149,6 +152,7 @@ rm -rf perl
 #Python tar xf Python-3.11.9.tar.xz https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tar.xz
 # 3.12.2 doesnt compile
 cd /sources
+mkdir -p Python
 tar xf Python-*.tar.xz --strip-components=1 --directory=Python
 pushd Python
 ./configure --prefix=/usr   \
@@ -163,7 +167,8 @@ rm -rf Python
 
 # texinfo
 cd /sources
-tar xf texinfo-*.tar.xz --strip-components=1 --directory=textinfo
+mkdir -p texinfo
+tar xf texinfo-*.tar.xz --strip-components=1 --directory=texinfo
 pushd texinfo
 
 ./configure --prefix=/usr
@@ -175,6 +180,7 @@ rm -rf texinfo
 
 # Util-linux
 cd /sources
+mkdir -p util-linux
 tar xf util-linux-*.tar.xz --strip-components=1 --directory=util-linux
 pushd util-linux
 
