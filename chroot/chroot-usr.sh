@@ -219,9 +219,9 @@ rm -rf /tools
 # umount $PFS/{sys,proc,run,dev}
 
 cd /sources
-sh /base/build_pkg.sh /sources/base/pkg
-sh /base/stripping.sh
-sh /base/cleanup.sh
+sh /sources/base/build_pkg.sh /sources/base/pkg
+sh /sources/base/stripping.sh
+sh /sources/base/cleanup.sh
 cd /sources
 
 echo "Done Installing Basic System Software."
