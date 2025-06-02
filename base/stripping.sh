@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+echo "Running stripping.sh ..."
 
 save_usrlib="$(cd /usr/lib; ls ld-linux*[^g])
              libc.so.6
@@ -24,7 +24,7 @@ online_usrbin="bash find strip"
 online_usrlib="libbfd-2.42.so
                libsframe.so.1.0.0
                libhistory.so.8.2
-               libncursesw.so.6.4-20230520
+               libncursesw.so.6.4
                libm.so.6
                libreadline.so.8.2
                libz.so.1.3.1

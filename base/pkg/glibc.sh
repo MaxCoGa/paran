@@ -79,11 +79,11 @@ localedef -i ja_JP -f SHIFT_JIS ja_JP.SJIS 2> /dev/null || true
 cat > /etc/nsswitch.conf << "EOF"
 # Begin /etc/nsswitch.conf
 
-passwd: files systemd
-group: files systemd
-shadow: files systemd
+passwd: files
+group: files
+shadow: files
 
-hosts: mymachines resolve [!UNAVAIL=return] files myhostname dns
+hosts: files dns
 networks: files
 
 protocols: files

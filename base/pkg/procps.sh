@@ -5,9 +5,8 @@ cd procps-ng-4.0.4
 ./configure --prefix=/usr                           \
             --docdir=/usr/share/doc/procps-ng-4.0.4 \
             --disable-static                        \
-            --disable-kill                          \
-            --with-systemd
+            --disable-kill
 
-make src_w_LDADD='$(LDADD) -lsystemd'
-# make -k check
+make
+
 make install

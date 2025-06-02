@@ -161,6 +161,8 @@ chroot "$PFS" /usr/bin/env -i   \
     -c "sh /sources/chroot/chroot-usr.sh"
 
 
+# chroot /mnt/pfs/ /bin/bash
+
 # building
 # https://www.linuxfromscratch.org/lfs/view/12.1-systemd/chapter09/chapter09.html
 

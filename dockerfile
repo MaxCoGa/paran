@@ -23,7 +23,10 @@ RUN apt install -y bzip2 git make gcc libncurses-dev flex bison \
 
 COPY ./ /paran-src/
 WORKDIR /paran-src/
+RUN ln -s bash /bin/sh.bash && mv /bin/sh.bash /bin/sh
 RUN chmod +x requirements.sh
+RUN chmod +x paranbuilder.sh
+RUN chmod +x pfs.sh
 RUN chmod +x exec/*
 RUN ./exec/bash-fix.sh
 

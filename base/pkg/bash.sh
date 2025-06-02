@@ -20,4 +20,4 @@ make
 # EOF
 
 make install
-exec /usr/bin/bash --login
+# exec /usr/bin/bash --login

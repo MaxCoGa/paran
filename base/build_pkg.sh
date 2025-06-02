@@ -89,11 +89,12 @@ scripts=(
     markupsafe.sh
     jinja2.sh
     systemd.sh
-    dbus.sh
     mandb.sh
     procps.sh
     utillinux.sh
     e2fsprogs.sh
+    sysklogd.sh
+    sysvinit.sh
 )
 
 for script in "${scripts[@]}"; do
