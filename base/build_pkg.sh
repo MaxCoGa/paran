@@ -95,6 +95,7 @@ scripts=(
     e2fsprogs.sh
     sysklogd.sh
     sysvinit.sh
+    lfs-bootscripts.sh
 )
 
 for script in "${scripts[@]}"; do
