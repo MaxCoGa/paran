@@ -1,5 +1,5 @@
 # base # BUSYBOX DOENST COMPILE WITH LATEST VERSION BUG: http://lists.busybox.net/pipermail/busybox-cvs/2024-January/041752.html
-FROM ubuntu:20.04 
+FROM ubuntu:24.04 
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV PFS=/mnt/pfs
@@ -17,7 +17,7 @@ RUN apt install -y bzip2 git make gcc libncurses-dev flex bison \
     grub-common grub-pc-bin grub2-common grub-pc xorriso \
     genisoimage libssl-dev syslinux dosfstools python3 gawk \
     bzip2-doc extlinux libbrotli-dev libbz2-dev libfreetype-dev libltdl-dev \
-    libltdl7 libpng-dev libpng-tools libtool texinfo
+    libltdl7 libpng-dev libpng-tools libtool texinfo squashfs-tools
 
 # RUN git clone https://github.com/MaxCoGa/paran.git
 

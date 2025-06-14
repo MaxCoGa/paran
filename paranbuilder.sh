@@ -32,15 +32,19 @@ chmod -v a+wt $PFS/sources
 
 # add helper script
 cp -r /paran-src/base/ $PFS/sources
+cp -r /paran-src/base_plus/ $PFS/sources
 cp -r /paran-src/toolchain $PFS/sources
 cp -r /paran-src/chroot $PFS/sources
 chmod +x $PFS/sources/toolchain/*.sh 
 chmod +x $PFS/sources/base/*.sh 
 chmod +x $PFS/sources/base/pkg/*.sh 
+chmod +x $PFS/sources/base_plus/*.sh 
+chmod +x $PFS/sources/base_plus/pkg/*.sh 
 chmod +x $PFS/sources/chroot/*.sh 
 
 cd $PFS/sources
 sh $PFS/sources/base/get_pkg.sh $PFS/sources/base
+sh $PFS/sources/base_plus/get_pkg.sh $PFS/sources/base_plus
 cd $PFS
 
 chown root:root $PFS/sources/*

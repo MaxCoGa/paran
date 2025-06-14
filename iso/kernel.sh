@@ -9,7 +9,14 @@ make
 make modules_install
 make firmware_install
 
-cp -iv arch/x86/boot/bzImage /boot/vmlinuz-6.8.2-lfs-12.1-systemd
+
+	make x86_64_defconfig -j $(nproc)
+	make -j $(nproc)
+# Run make menuconfig, navigate to File systems -> Miscellaneous filesystems, and enable SquashFS as built-in ([*]).
+
+
+
+cp -iv arch/x86/boot/bzImage /boot/vmlinuz-6.8.2-lfs-12.1
 cp -iv System.map /boot/System.map-6.8.2
 cp -iv .config /boot/config-6.8.2
 cp -r Documentation -T /usr/share/doc/linux-6.8.2

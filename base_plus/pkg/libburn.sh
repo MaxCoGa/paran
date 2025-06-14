@@ -12,5 +12,5 @@ make
 
 make install
 
-install -v -dm755 /usr/share/doc/libburn-1.5.6 &&
-install -v -m644 doc/html/* /usr/share/doc/libburn-1.5.6
+# install -v -dm755 /usr/share/doc/libburn-1.5.6 &&
+# install -v -m644 doc/html/* /usr/share/doc/libburn-1.5.6

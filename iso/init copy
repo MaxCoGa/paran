@@ -1,13 +1,122 @@
-echo paran-indev > /etc/paran-release
+mkdir -p /tmp/bkp
+mkdir -p /tmp/lfs-iso/iso
+rsync -aHAX --exclude='/boot' --exclude='/sources' /mnt/pfs/ /tmp/lfs-iso/iso/
 
-cat > /etc/lsb-release << "EOF"
+
+mkdir -p /tmp/lfs-iso/iso/boot/grub
+cp /mnt/pfs/boot/vmlinuz-* /tmp/lfs-iso/iso/boot/vmlinuz
+
+
+
+
+cat > /tmp/lfs-iso/iso/boot/grub/grub.cfg << "EOF"
+set timeout=5
+set default=0
+
+menuentry "LFS Boot" {
+    linux /boot/vmlinuz root=/dev/sr0 ro
+    # If using initrd:
+    # initrd /boot/initrd.img
+}
+
+EOF
+
+
+cat > /tmp/lfs-iso/iso/etc/init.d/rcS << "EOF"
+# Mount essential pseudo-filesystems for ISO boot
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev || mount -o mode=0755 -t tmpfs tmpfs /dev
+mount -t tmpfs tmpfs /run
+
+# Create basic dirs if missing
+mkdir -p /dev/pts /dev/shm /run/lock
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /dev/shm
+
+EOF
+
+grub-mkrescue -o /tmp/p.iso /tmp/lfs-iso/iso
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# this work
+cat > /tmp/lfs-iso/iso/etc/shadow << "EOF"
+root::20247:0:::::
+bin:x:20247:0:99999:7:::
+daemon:x:20247:0:99999:7:::
+messagebus:x:20247:0:99999:7:::
+uuidd:x:20247:0:99999:7:::
+nobody:x:20247:0:99999:7:::
+EOF
+
+cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
+#!/bin/sh
+
+# Mount essential pseudo filesystems
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t tmpfs tmpfs /run
+mount -t devtmpfs devtmpfs /dev || mount -t tmpfs -o mode=0755 tmpfs /dev
+
+mkdir -p /dev/pts /dev/shm /run/lock
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /dev/shm
+
+# Hand off to the real init
+exec /sbin/init "$@"
+
+EOF
+chmod +x /tmp/lfs-iso/iso/early-init.sh
+
+cat > /tmp/lfs-iso/iso/boot/grub/grub.cfg << "EOF"
+set timeout=5
+set default=0
+
+menuentry "PFS Boot" {
+    linux /boot/vmlinuz root=/dev/sr0 ro init=/early-init.sh
+}
+
+
+EOF
+
+
+
+
+
+
+
+
+
+
+
+# TODO fix cacert git -c http.sslVerify=false clone <repository-name>
+
+
+
+
+
+
+cat > /tmp/lfs-iso/iso/etc/lsb-release << "EOF"
 DISTRIB_ID="Paran OS"
 DISTRIB_RELEASE="indev"
 DISTRIB_CODENAME="maxksorg"
 DISTRIB_DESCRIPTION="paran"
 EOF
 
-cat > /etc/os-release << "EOF"
+cat > /tmp/lfs-iso/iso/etc/os-release << "EOF"
 NAME="ParanOS"
 VERSION="indev"
 ID=paran
@@ -16,11 +125,8 @@ VERSION_CODENAME="centipede"
 HOME_URL="https://paranos.org"
 EOF
 
-cat > /etc/shadow << "EOF"
-root::12699:0:::::
-EOF
 
-cat > /etc/issue << "EOF"
+cat > /tmp/lfs-iso/iso/etc/issue << "EOF"
 
 
                                         :::::::::::::::::::                                         
@@ -80,37 +186,4 @@ cat > /etc/issue << "EOF"
                                         :::::::::::::::::::.                                        
 
 
-EOF
-
-
-
-# init tab
-cat > /etc/inittab << "EOF"
-# Begin /etc/inittab
-
-id:3:initdefault:
-
-si::sysinit:/etc/rc.d/init.d/rc S
-
-l0:0:wait:/etc/rc.d/init.d/rc 0
-l1:S1:wait:/etc/rc.d/init.d/rc 1
-l2:2:wait:/etc/rc.d/init.d/rc 2
-l3:3:wait:/etc/rc.d/init.d/rc 3
-l4:4:wait:/etc/rc.d/init.d/rc 4
-l5:5:wait:/etc/rc.d/init.d/rc 5
-l6:6:wait:/etc/rc.d/init.d/rc 6
-
-ca:12345:ctrlaltdel:/sbin/shutdown -t1 -a -r now
-
-su:S06:once:/sbin/sulogin
-s1:1:respawn:/sbin/sulogin
-
-1:2345:respawn:/sbin/agetty --noclear tty1 9600
-2:2345:respawn:/sbin/agetty tty2 9600
-3:2345:respawn:/sbin/agetty tty3 9600
-4:2345:respawn:/sbin/agetty tty4 9600
-5:2345:respawn:/sbin/agetty tty5 9600
-6:2345:respawn:/sbin/agetty tty6 9600
-
-# End /etc/inittab
 EOF

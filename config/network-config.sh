@@ -21,3 +21,28 @@ cat > /etc/hosts <<"EOF"
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
+
+
+# https://www.linuxfromscratch.org/blfs/view/svn/basicnet/dhcpcd.html
+cd /sources
+wget https://github.com/NetworkConfiguration/dhcpcd/releases/download/v10.2.4/dhcpcd-10.2.4.tar.xz
+tar -xf dhcpcd-10.2.4.tar.xz
+cd dhcpcd-10.2.4
+
+
+./configure --prefix=/usr                \
+            --sysconfdir=/etc            \
+            --libexecdir=/usr/lib/dhcpcd \
+            --dbdir=/var/lib/dhcpcd      \
+            --runstatedir=/run           \
+            --disable-privsep         &&
+make
+
+
+make install
+
+
+# after boot
+ip link
+ip link set eth0 up
+dhcpcd eth0

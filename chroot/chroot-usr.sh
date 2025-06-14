@@ -195,17 +195,28 @@ find /usr/{lib,libexec} -name \*.la -delete
 rm -rf /tools
 
 #### BACKUP POINT IF NEEDED #####
-## BACKUP ## https://www.linuxfromscratch.org/lfs/view/stable-systemd/chapter07/cleanup.html
+## BACKUP ## https://www.linuxfromscratch.org/lfs/view/12.1/chapter07/cleanup.html
 # exit
 # mountpoint -q $PFS/dev/shm && umount $PFS/dev/shm
 # umount $PFS/dev/pts
 # umount $PFS/{sys,proc,run,dev}
 
+# start of chapter 8
 cd /sources
 sh /sources/base/build_pkg.sh /sources/base/pkg
 sh /sources/base/stripping.sh
 sh /sources/base/cleanup.sh
 cd /sources
+sh /sources/base_plus/build_pkg.sh /sources/base_plus/pkg
+cd /sources
 
 echo "Done Installing Basic System Software."
 # cd /sources after each scripts?
+# start of chapter 9
+
+
+
+
+# bash /usr/lib/udev/init-net-rules.sh
+
+# cat /etc/udev/rules.d/70-persistent-net.rules
