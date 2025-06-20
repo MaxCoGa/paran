@@ -78,7 +78,7 @@ esac
 # echo "pfs ALL = NOPASSWD : ALL" >> /etc/sudoers
 # switch to pfs user
 # su - pfs -c "/paran-src/pfs.sh"
-su pfs -c "/paran-src/pfs.sh"
+su pfs -c "/paran-src/pfs.sh" # toolchain
 
 # # Envrionment Setup
 # # bash profile
@@ -286,5 +286,5 @@ chroot "$PFS" /usr/bin/env -i   \
 # ## Kernel
 # cd /sources
 # # tar
-# cd linux-6.8.2/  
+# cd linux-6.8.12/  
 # make mrproper

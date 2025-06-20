@@ -1,6 +1,6 @@
 cd /sources
-tar xf linux-6.8.2.tar.xz
-cd linux-6.8.2
+tar xf linux-6.8.12.tar.xz
+cd linux-6.8.12
 
 make mrproper
 make defconfig
@@ -16,10 +16,10 @@ make firmware_install
 
 
 
-cp -iv arch/x86/boot/bzImage /boot/vmlinuz-6.8.2-lfs-12.1
-cp -iv System.map /boot/System.map-6.8.2
-cp -iv .config /boot/config-6.8.2
-cp -r Documentation -T /usr/share/doc/linux-6.8.2
+cp -iv arch/x86/boot/bzImage /boot/vmlinuz-6.8.12-lfs-12.1
+cp -iv System.map /boot/System.map-6.8.12
+cp -iv .config /boot/config-6.8.12
+cp -r Documentation -T /usr/share/doc/linux-6.8.12
 
 install -v -m755 -d /etc/modprobe.d
 cat > /etc/modprobe.d/usb.conf << "EOF"

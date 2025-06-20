@@ -2,6 +2,8 @@ mkdir -p /tmp/bkp
 mkdir -p /tmp/lfs-iso/iso
 rsync -aHAX --exclude='/boot' --exclude='/sources' /mnt/pfs/ /tmp/lfs-iso/iso/
 
+rm -r lfs-iso/iso/tmp/*
+
 
 mkdir -p /tmp/lfs-iso/iso/boot/grub
 cp /mnt/pfs/boot/vmlinuz-* /tmp/lfs-iso/iso/boot/vmlinuz
@@ -40,6 +42,7 @@ grub-mkrescue -o /tmp/p.iso /tmp/lfs-iso/iso
 
 
 
+# rm -r /etc/X11/xorg.conf.d
 
 
 
@@ -51,8 +54,7 @@ grub-mkrescue -o /tmp/p.iso /tmp/lfs-iso/iso
 
 
 
-
-# this work
+# remove password on root for release
 cat > /tmp/lfs-iso/iso/etc/shadow << "EOF"
 root::20247:0:::::
 bin:x:20247:0:99999:7:::
@@ -60,6 +62,42 @@ daemon:x:20247:0:99999:7:::
 messagebus:x:20247:0:99999:7:::
 uuidd:x:20247:0:99999:7:::
 nobody:x:20247:0:99999:7:::
+tester:x:20247:0:99999:7:::
+sshd:!:20258:0:99999:7:::
+EOF
+
+###
+cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
+#!/bin/sh
+
+# Mount essential pseudo filesystems
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t tmpfs tmpfs /run
+mount -t devtmpfs devtmpfs /dev || mount -t tmpfs -o mode=0755 tmpfs /dev
+
+mkdir -p /dev/pts /dev/shm /run/lock
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /dev/shm
+
+# Use /mnt as writable RAM-backed workspace
+mount -t tmpfs tmpfs /mnt
+
+# Set up directories for overlay
+mkdir -p /mnt/lower /mnt/upper/upper /mnt/work/work /mnt/root
+
+# Mount ISO root (read-only) as lower
+mount -o ro /dev/sr0 /mnt/lower
+
+# Mount overlay filesystem
+mount -t overlay overlay -o lowerdir=/mnt/lower,upperdir=/mnt/upper/upper,workdir=/mnt/work/work /mnt/root
+
+# Hand off to the real init
+exec /sbin/init "$@"
+
+# Switch to the overlay root
+# exec switch_root /mnt/root /sbin/init
+
 EOF
 
 cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
@@ -76,17 +114,130 @@ mount -t devpts devpts /dev/pts
 mount -t tmpfs tmpfs /dev/shm
 
 # Hand off to the real init
+# exec /sbin/init "$@"
+exec /bin/bash
+
+
+EOF
+
+
+# xorg
+cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
+#!/bin/sh
+
+# Mount essential pseudo-filesystems
+mount -t devtmpfs dev /dev
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t tmpfs tmpfs /run
+
+# TTY/PTY pseudo terminal
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+
+# Optional: load keyboard layout early if needed
+# loadkeys us
+
+# Load GPU/video modules for VirtualBox or fallback framebuffer
+modprobe fbdev 2>/dev/null 
+# modprobe vboxvideo 2>/dev/null || \
+# modprobe vmwgfx 2>/dev/null || \
+# modprobe virtio 2>/dev/null || \
+# modprobe cirrus 2>/dev/null || \
+# modprobe bochs_drm 2>/dev/null || \
+# modprobe simplefb 2>/dev/null || \
+# modprobe vesafb 2>/dev/null
+# modprobe qxl 2>/dev/null
+
+# Trigger udev to populate /dev
+udevd &
+udevadm trigger
+udevadm settle
+
+
+# Create working tmpfs root
+echo "[+] Creating writable tmpfs root..."
+mount -t tmpfs tmpfs /mnt
+mkdir -p /mnt/ro /mnt/overlay/{upper,work,merged}
+
+# Mount ISO (read-only root) to /mnt/ro
+echo "[+] Mounting ISO to /mnt/ro..."
+mount -o ro /dev/sr0 /mnt/ro
+
+# Mount overlay filesystem
+echo "[+] overlay filesystem."
+mount -t overlay overlay -o lowerdir=/mnt/ro,upperdir=/mnt/overlay/upper,workdir=/mnt/overlay/work /mnt/overlay/merged || {
+    echo "Failed to mount root filesystem!"
+    exec sh
+}
+
+# Move mounted pseudo-filesystems into the new root
+echo "[+] Move mounted pseudo-filesystems into the new root"
+mount --move /dev  /mnt/overlay/merged/dev
+mount --move /proc  /mnt/overlay/merged/proc
+mount --move /sys  /mnt/overlay/merged/sys
+
+echo "[+] switch_root"
+# Handoff to the real init system (e.g. sysvinit or busybox init)
+exec switch_root /mnt/overlay/merged "/sbin/init" "$@"
+# exec switch_root /mnt/overlay/merged /bin/bash
+# exec sh
+
+
+
+EOF
+
+
+
+# with overlayfs no xorg
+# when in switch_root /mnt/overlay/merged /bin/bash
+cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
+#!/bin/sh
+
+set -eu
+
+echo "[+] early-init.sh starting"
+
+# Mount virtual filesystems
+mount -t devtmpfs dev /dev
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -t tmpfs tmpfs /run
+
+# Create working tmpfs root
+echo "[+] Creating writable tmpfs root..."
+mount -t tmpfs tmpfs /mnt
+mkdir -p /mnt/ro /mnt/overlay/{upper,work,merged}
+
+# Mount ISO (read-only root) to /mnt/ro
+echo "[+] Mounting ISO to /mnt/ro..."
+mount -o ro /dev/sr0 /mnt/ro
+
+# Mount overlay filesystem
+mount -t overlay overlay -o lowerdir=/mnt/ro,upperdir=/mnt/overlay/upper,workdir=/mnt/overlay/work /mnt/overlay/merged
+
+# echo "[+] Mounted overlay filesystem to /overlay/merged"
+
 exec /sbin/init "$@"
+
+
+# # Switch to new root
+# exec switch_root /mnt/overlay/merged /sbin/init "$@"
+# exec switch_root /mnt/overlay/merged /bin/bash
+
 
 EOF
 chmod +x /tmp/lfs-iso/iso/early-init.sh
 
+
+
+###
 cat > /tmp/lfs-iso/iso/boot/grub/grub.cfg << "EOF"
 set timeout=5
 set default=0
 
 menuentry "PFS Boot" {
-    linux /boot/vmlinuz root=/dev/sr0 ro init=/early-init.sh
+    linux /boot/vmlinuz init=/early-init.sh root=/dev/sr0 ro
 }
 
 
