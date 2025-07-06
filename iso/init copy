@@ -179,17 +179,17 @@ mount --move /sys  /mnt/overlay/merged/sys
 
 echo "[+] switch_root"
 # Handoff to the real init system (e.g. sysvinit or busybox init)
-exec switch_root /mnt/overlay/merged "/sbin/init" "$@"
-# exec switch_root /mnt/overlay/merged /bin/bash
+# exec switch_root /mnt/overlay/merged "/sbin/init" "$@"
+exec switch_root /mnt/overlay/merged /bin/bash
 # exec sh
-
-
-
 EOF
+# lsmod
+# modprobe modulename
+# find /lib/modules/$(uname -r) -type f -name '*.ko'
+# startx
 
 
-
-# with overlayfs no xorg
+# with overlayfs no xorg https://www.linuxfromscratch.org/blfs/view/12.1/x/xorg-config.html
 # when in switch_root /mnt/overlay/merged /bin/bash
 cat > /tmp/lfs-iso/iso/early-init.sh << "EOF"
 #!/bin/sh
