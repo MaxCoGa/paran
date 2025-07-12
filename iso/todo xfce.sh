@@ -458,4 +458,380 @@ cd xfce4-panel-4.18.5
 make
 make install
 
-# thunar https://www.linuxfromscratch.org/blfs/view/12.1/xfce/thunar.html
+
+#hicolor-icon-theme
+cd /sources
+wget https://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.17.tar.xz
+tar -xf hicolor-icon-theme-0.17*
+cd hicolor-icon-theme-0.17
+
+./configure --prefix=/usr
+make install
+
+#libgudev
+cd /sources
+wget https://download.gnome.org/sources/libgudev/238/libgudev-238.tar.xz
+tar -xf libgudev-238*
+cd libgudev-238
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr --buildtype=release .. &&
+ninja
+ninja install
+
+#libnotify
+cd /sources
+wget https://download.gnome.org/sources/libnotify/0.8/libnotify-0.8.3.tar.xz
+tar -xf libnotify-0.8.3*
+cd libnotify-0.8.3
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr       \
+            --buildtype=release \
+            -Dgtk_doc=false     \
+            -Dman=false         \
+            ..                  &&
+ninja
+
+ninja install &&
+if [ -e /usr/share/doc/libnotify ]; then
+  rm -rf /usr/share/doc/libnotify-0.8.3
+  mv -v  /usr/share/doc/libnotify{,-0.8.3}
+fi
+
+#libogg
+cd /sources
+wget https://downloads.xiph.org/releases/ogg/libogg-1.3.5.tar.xz
+tar -xf libogg-1.3.5*
+cd libogg-1.3.5
+
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/libogg-1.3.5 &&
+make
+make install
+
+#libvorbis
+cd /sources
+wget https://downloads.xiph.org/releases/vorbis/libvorbis-1.3.7.tar.xz
+tar -xf libvorbis-1.3.7*
+cd libvorbis-1.3.7
+
+./configure --prefix=/usr --disable-static &&
+make
+
+make install &&
+install -v -m644 doc/Vorbis* /usr/share/doc/libvorbis-1.3.7
+
+#gstreamer
+cd /sources
+wget https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.22.10.tar.xz
+tar -xf gstreamer-1.22.10*
+cd gstreamer-1.22.10
+
+mkdir build &&
+cd    build &&
+
+meson  setup ..            \
+       --prefix=/usr       \
+       --buildtype=release \
+       -Dgst_debug=false   \
+       -Dpackage-origin=https://www.linuxfromscratch.org/blfs/view/12.1/ \
+       -Dpackage-name="GStreamer 1.22.10 BLFS" &&
+ninja
+
+rm -rf /usr/bin/gst-* /usr/{lib,libexec}/gstreamer-1.0
+
+ninja install
+
+#alsa-lib deps https://www.linuxfromscratch.org/blfs/view/12.1/general/elogind.html TODO https://www.linuxfromscratch.org/blfs/view/12.1/multimedia/alsa-lib.html kernel
+cd /sources
+wget https://www.alsa-project.org/files/pub/lib/alsa-lib-1.2.11.tar.bz2
+tar -xf alsa-lib-1.2.11*
+cd alsa-lib-1.2.11
+
+./configure &&
+make
+# make doc TODO need doxygen
+make install
+
+install -v -d -m755 /usr/share/doc/alsa-lib-1.2.11/html/search &&
+install -v -m644 doc/doxygen/html/*.* \
+                /usr/share/doc/alsa-lib-1.2.11/html &&
+install -v -m644 doc/doxygen/html/search/* \
+                /usr/share/doc/alsa-lib-1.2.11/html/search
+
+#sound-theme-freedesktop
+cd /sources
+wget https://people.freedesktop.org/~mccann/dist/sound-theme-freedesktop-0.8.tar.bz2
+tar -xf sound-theme-freedesktop-0.8*
+cd sound-theme-freedesktop-0.8
+
+./configure --prefix=/usr &&
+make
+make install
+
+#libcanberra
+cd /sources
+wget https://0pointer.de/lennart/projects/libcanberra/libcanberra-0.30.tar.xz
+wget https://www.linuxfromscratch.org/patches/blfs/12.1/libcanberra-0.30-wayland-1.patch
+tar -xf libcanberra-0.30.tar.xz
+cd libcanberra-0.30
+
+patch -Np1 -i ../libcanberra-0.30-wayland-1.patch
+
+./configure --prefix=/usr --disable-oss &&
+make
+make docdir=/usr/share/doc/libcanberra-0.30 install
+
+#notification-daemon
+cd /sources
+wget https://download.gnome.org/sources/notification-daemon/3.20/notification-daemon-3.20.0.tar.xz
+tar -xf notification-daemon-3.20.0.tar.xz
+cd notification-daemon-3.20.0
+
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-static  &&
+make
+make install
+
+#xfce4-dev-tools
+cd /sources
+wget http://archive.xfce.org/src/xfce/xfce4-dev-tools/4.18/xfce4-dev-tools-4.18.1.tar.bz2
+tar -xf xfce4-dev-tools-4.18.1.tar.bz2
+cd xfce4-dev-tools-4.18.1
+
+./configure --prefix=/usr &&
+make
+make install
+
+#SQLite
+cd /sources
+wget https://sqlite.org/2024/sqlite-autoconf-3450100.tar.gz
+# wget https://sqlite.org/2024/sqlite-doc-3450100.zip
+tar -xf sqlite-autoconf-3450100.tar.gz
+cd sqlite-autoconf-3450100
+
+./configure --prefix=/usr     \
+            --disable-static  \
+            --enable-fts{4,5} \
+            CPPFLAGS="-DSQLITE_ENABLE_COLUMN_METADATA=1 \
+                      -DSQLITE_ENABLE_UNLOCK_NOTIFY=1   \
+                      -DSQLITE_ENABLE_DBSTAT_VTAB=1     \
+                      -DSQLITE_SECURE_DELETE=1          \
+                      -DSQLITE_ENABLE_FTS3_TOKENIZER=1" &&
+make
+make install
+# install -v -m755 -d /usr/share/doc/sqlite-3.45.1 &&
+# cp -v -R sqlite-doc-3450100/* /usr/share/doc/sqlite-3.45.1
+
+#xfce4-notifyd deps SQLite not mentionned
+cd /sources
+wget https://archive.xfce.org/src/apps/xfce4-notifyd/0.9/xfce4-notifyd-0.9.4.tar.bz2
+tar -xf xfce4-notifyd-0.9.4.tar.bz2
+cd xfce4-notifyd-0.9.4
+
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --disable-systemd &&
+make
+make install
+# notify-send -i info Information "Hi ${USER}, This is a Test"
+
+# thunar
+cd /sources
+wget https://archive.xfce.org/src/xfce/thunar/4.18/thunar-4.18.10.tar.bz2
+tar -xf thunar-4.18.10.tar.bz2
+cd thunar-4.18.10
+
+sed -i 's/\tinstall-systemd_userDATA/\t/' Makefile.in
+
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --docdir=/usr/share/doc/thunar-4.18.10 &&
+make
+
+
+# thunar-volman deps Gvfs-1.52.2 https://www.linuxfromscratch.org/blfs/view/12.1/xfce/thunar-volman.html
+cd /sources
+wget https://archive.xfce.org/src/xfce/thunar-volman/4.18/thunar-volman-4.18.0.tar.bz2
+tar -xf thunar-volman-4.18.0.tar.bz2
+cd thunar-volman-4.18.0
+
+./configure --prefix=/usr &&
+make
+
+make install
+
+# tumbler
+cd /sources
+wget https://archive.xfce.org/src/xfce/tumbler/4.18/tumbler-4.18.2.tar.bz2
+tar -xf tumbler-4.18.2.tar.bz2
+cd tumbler-4.18.2
+
+./configure --prefix=/usr --sysconfdir=/etc &&
+make
+
+make install
+
+rm -fv /usr/lib/systemd/user/tumblerd.service
+
+# xfce4-appfinder
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfce4-appfinder/4.18/xfce4-appfinder-4.18.1.tar.bz2
+tar -xf xfce4-appfinder-4.18.1.tar.bz2
+cd xfce4-appfinder-4.18.1
+
+./configure --prefix=/usr &&
+make
+
+make install
+
+#Doxygen
+cd /sources
+wget https://doxygen.nl/files/doxygen-1.10.0.src.tar.gz
+tar -xf doxygen-1.10.0.src.tar.gz
+cd doxygen-1.10.0
+
+grep -rl '^#!.*python$' | xargs sed -i '1s/python/&3/'
+
+mkdir -v build &&
+cd       build &&
+
+cmake -G "Unix Makefiles"         \
+      -DCMAKE_BUILD_TYPE=Release  \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -Wno-dev .. &&
+
+make
+
+make install &&
+install -vm644 ../doc/*.1 /usr/share/man/man1
+
+#libusb kernel https://www.linuxfromscratch.org/blfs/view/12.1/general/libusb.html
+cd /sources
+wget https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.tar.bz2
+tar -xf libusb-1.0.27.tar.bz2
+cd libusb-1.0.27
+
+./configure --prefix=/usr --disable-static &&
+make
+
+pushd doc                &&
+  doxygen -u doxygen.cfg &&
+  make docs              &&
+popd
+
+make install
+
+#upower
+cd /sources
+wget https://gitlab.freedesktop.org/upower/upower/-/archive/v1.90.2/upower-v1.90.2.tar.bz2
+tar -xf upower-v1.90.2.tar.bz2
+cd upower-v1.90.2
+
+sed '/parse_version/d' -i src/linux/integration-test.py
+mkdir build &&
+cd    build &&
+
+meson setup ..                  \
+      --prefix=/usr             \
+      --buildtype=release       \
+      -Dgtk-doc=false           \
+      -Dman=false               \
+      -Dsystemdsystemunitdir=no \
+      -Dudevrulesdir=/usr/lib/udev/rules.d &&
+ninja
+ninja install
+
+# xfce4-power-manager deps https://www.linuxfromscratch.org/blfs/view/12.1/xfce/xfce4-power-manager.html
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfce4-power-manager/4.18/xfce4-power-manager-4.18.3.tar.bz2
+tar -xf xfce4-power-manager-4.18.3.tar.bz2
+cd xfce4-power-manager-4.18.3
+
+./configure --prefix=/usr --sysconfdir=/etc &&
+make
+make install
+
+#libxklavier
+cd /sources
+wget https://people.freedesktop.org/~svu/libxklavier-5.4.tar.bz2
+tar -xf libxklavier-5.4.tar.bz2
+cd libxklavier-5.4
+
+./configure --prefix=/usr --disable-static &&
+make
+make install
+
+#lxde-icon-theme
+cd /sources
+wget https://downloads.sourceforge.net/lxde/lxde-icon-theme-0.5.1.tar.xz
+tar -xf lxde-icon-theme-0.5.1.tar.xz
+cd lxde-icon-theme-0.5.1
+
+./configure --prefix=/usr
+make install
+gtk-update-icon-cache -qf /usr/share/icons/nuoveXT2
+
+# xfce4-settings
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfce4-settings/4.18/xfce4-settings-4.18.4.tar.bz2
+tar -xf xfce4-settings-4.18.4.tar.bz2
+cd xfce4-settings-4.18.4
+
+./configure --prefix=/usr --sysconfdir=/etc &&
+make
+make install
+
+# Xfdesktop
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfdesktop/4.18/xfdesktop-4.18.1.tar.bz2
+tar -xf xfdesktop-4.18.1.tar.bz2
+cd xfdesktop-4.18.1
+
+./configure --prefix=/usr &&
+make
+make install
+
+# Xfwm4
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfwm4/4.18/xfwm4-4.18.0.tar.bz2
+tar -xf xfwm4-4.18.0.tar.bz2
+cd xfwm4-4.18.0
+
+./configure --prefix=/usr &&
+make
+make install
+
+#desktop-file-utils
+cd /sources
+wget https://www.freedesktop.org/software/desktop-file-utils/releases/desktop-file-utils-0.27.tar.xz
+tar -xf desktop-file-utils-0.27.tar.xz
+cd desktop-file-utils-0.27
+
+rm -fv /usr/bin/desktop-file-edit
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr --buildtype=release .. &&
+ninja
+ninja install
+
+# xfce4-session
+cd /sources
+wget https://archive.xfce.org/src/xfce/xfce4-session/4.18/xfce4-session-4.18.3.tar.bz2
+tar -xf xfce4-session-4.18.3.tar.bz2
+cd xfce4-session-4.18.3
+
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --disable-legacy-sm &&
+make
+make install

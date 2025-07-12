@@ -183,10 +183,12 @@ echo "[+] switch_root"
 exec switch_root /mnt/overlay/merged /bin/bash
 # exec sh
 EOF
+# dhcpcd
 # lsmod
 # modprobe modulename
 # find /lib/modules/$(uname -r) -type f -name '*.ko'
 # startx
+# https://www.linuxfromscratch.org/blfs/view/12.1/xfce/xfce4-session.html startxfce4
 
 
 # with overlayfs no xorg https://www.linuxfromscratch.org/blfs/view/12.1/x/xorg-config.html
