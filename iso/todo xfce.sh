@@ -835,3 +835,197 @@ cd xfce4-session-4.18.3
             --disable-legacy-sm &&
 make
 make install
+
+#Nettle-3.9.1
+cd /sources
+wget https://ftp.gnu.org/gnu/nettle/nettle-3.9.1.tar.gz
+tar -xf nettle-3.9.1.tar.gz
+cd nettle-3.9.1
+
+./configure --prefix=/usr --disable-static &&
+make
+
+make install &&
+chmod   -v   755 /usr/lib/lib{hogweed,nettle}.so &&
+install -v -m755 -d /usr/share/doc/nettle-3.9.1 &&
+install -v -m644 nettle.{html,pdf} /usr/share/doc/nettle-3.9.1
+
+
+#GnuTLS
+cd /sources
+wget https://www.gnupg.org/ftp/gcrypt/gnutls/v3.8/gnutls-3.8.3.tar.xz
+tar -xf gnutls-3.8.3.tar.xz
+cd gnutls-3.8.3
+
+./configure --prefix=/usr \
+            --docdir=/usr/share/doc/gnutls-3.8.3 \
+            --with-default-trust-store-pkcs11="pkcs11:" &&
+make
+make install
+
+#Graphene
+cd /sources
+wget https://download.gnome.org/sources/graphene/1.10/graphene-1.10.8.tar.xz
+tar -xf graphene-1.10.8.tar.xz
+cd graphene-1.10.8
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr --buildtype=release .. &&
+ninja
+ninja install
+
+
+#PyCairo
+cd /sources
+wget https://github.com/pygobject/pycairo/releases/download/v1.26.0/pycairo-1.26.0.tar.gz
+tar -xf pycairo-1.26.0.tar.gz
+cd pycairo-1.26.0
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr --buildtype=release .. &&
+ninja
+ninja install
+
+#PyGObject
+cd /sources
+wget https://download.gnome.org/sources/pygobject/3.46/pygobject-3.46.0.tar.xz
+tar -xf pygobject-3.46.0.tar.xz
+cd pygobject-3.46.0
+
+mv -v tests/test_gdbus.py{,.nouse} &&
+mv -v tests/test_overrides_gtk.py{,.nouse}
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr --buildtype=release .. &&
+ninja
+ninja install
+
+#gst-plugins-base-bad-good
+cd /sources
+wget https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.22.10.tar.xz
+tar -xf gst-plugins-base-1.22.10.tar.xz
+cd gst-plugins-base-1.22.10
+
+mkdir build &&
+cd    build &&
+
+meson  setup ..               \
+       --prefix=/usr          \
+       --buildtype=release    \
+       --wrap-mode=nodownload \
+       -Dpackage-origin=https://www.linuxfromscratch.org/blfs/view/12.1/ \
+       -Dpackage-name="GStreamer 1.22.10 BLFS"    &&
+ninja
+ninja install
+
+cd /sources
+wget https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.22.10.tar.xz
+tar -xf gst-plugins-bad-1.22.10.tar.xz
+cd gst-plugins-bad-1.22.10
+
+mkdir build &&
+cd    build &&
+
+meson  setup ..            \
+       --prefix=/usr       \
+       --buildtype=release \
+       -Dgpl=enabled       \
+       -Dpackage-origin=https://www.linuxfromscratch.org/blfs/view/12.1/ \
+       -Dpackage-name="GStreamer 1.22.10 BLFS" &&
+ninja
+ninja install
+
+
+cd /sources
+wget https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.22.10.tar.xz
+tar -xf gst-plugins-good-1.22.10.tar.xz
+cd gst-plugins-good-1.22.10
+
+mkdir build &&
+cd    build &&
+
+meson setup ..            \
+      --prefix=/usr       \
+      --buildtype=release \
+      -Dpackage-origin=https://www.linuxfromscratch.org/blfs/view/12.1/ \
+      -Dpackage-name="GStreamer 1.22.10 BLFS" &&
+ninja
+ninja install
+
+#gtk4
+cd /sources
+wget https://download.gnome.org/sources/gtk/4.12/gtk-4.12.5.tar.xz
+tar -xf gtk-4.12.5.tar.xz
+cd gtk-4.12.5
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr           \
+            --buildtype=release     \
+            -Dbroadway-backend=true \
+            -Dintrospection=enabled \
+            .. &&
+ninja
+ninja install
+
+#Graphviz
+cd /sources
+wget https://gitlab.com/graphviz/graphviz/-/archive/13.1.0/graphviz-13.1.0.tar.bz2
+tar -xf graphviz-13.1.0.tar.bz2
+cd graphviz-13.1.0
+
+mkdir build &&
+cd    build &&
+
+cmake -D CMAKE_INSTALL_PREFIX=/usr \
+      -D CMAKE_BUILD_TYPE=Release  \
+      ..                           &&
+
+sed -i '/GZIP/s/:.*$/=/' CMakeCache.txt &&
+
+make
+make install
+
+#Vala deps Graphviz not mentionned
+cd /sources
+wget https://download.gnome.org/sources/vala/0.56/vala-0.56.14.tar.xz
+tar -xf vala-0.56.14.tar.xz
+cd vala-0.56.14
+
+sed -i '/gvc.h/a#define TRUE 1' libvaladoc/gvc-compat.c
+./configure --prefix=/usr &&
+make
+make install
+
+#VTE
+cd /sources
+wget https://gitlab.gnome.org/GNOME/vte/-/archive/0.74.2/vte-0.74.2.tar.gz
+tar -xf vte-0.74.2.tar.gz
+cd vte-0.74.2
+
+mkdir build &&
+cd    build &&
+
+meson setup --prefix=/usr       \
+            --buildtype=release \
+            -D_systemd=false    &&
+ninja
+ninja install &&
+rm -v /etc/profile.d/vte.*
+
+# xfce4-terminal
+cd /sources
+wget https://archive.xfce.org/src/apps/xfce4-terminal/1.1/xfce4-terminal-1.1.2.tar.bz2
+tar -xf xfce4-terminal-1.1.2.tar.bz2
+cd xfce4-terminal-1.1.2
+
+./configure --prefix=/usr &&
+make
+make install

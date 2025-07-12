@@ -60,7 +60,6 @@ make CONFIG_PREFIX=../initrd install
 # mkdir -p initrd/lib/modules/6.8.2   #$(ls rootfs/boot/vmlinuz-* | grep -o '[0-9].*')
 # cp rootfs/lib/modules/6.8.2/kernel/fs/squashfs/squashfs.ko initrd/lib/modules/6.8.2/
 
-# TODO which command is not part of the base pkg....
 cat << EOF > /pfs-boot/initrd/init
 #!/bin/sh
 set -x
