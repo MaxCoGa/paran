@@ -46,3 +46,6 @@ make install
 ip link
 ip link set eth0 up
 dhcpcd eth0
+
+
+# iptables todo https://www.linuxfromscratch.org/blfs/view/12.1/postlfs/iptables.html
